@@ -50,6 +50,7 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
         Set<Map.Entry<String, IDataType>> s = this.symbols.entrySet();
 
+        // creates tokens for the symbol table
         for (Map.Entry<String, IDataType> m : s)
             symbols = symbols + "<'" + m.getKey() + "', " + m.getValue().toString() + "> \n";
 

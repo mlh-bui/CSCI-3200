@@ -25,6 +25,6 @@ public class StackMachineCompiler implements IStackMachineCompiler {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-    }
+    } // method compile
 
 }

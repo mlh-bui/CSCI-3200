@@ -91,12 +91,13 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         this.token = this.scanner.getToken();
         this.symbols = new HashMap<String, IDataType>();
         this.code = new ArrayList<String>();
-    }
+    } // constructor SyntaxAnalyzer
 
+    // calls the function for the start symbol
     public String compile() throws Exception {
         program();
 
-        // stack machine code
+        // stack machine code (to be printed in the output file)
 
         String code = "";
 
@@ -104,34 +105,41 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
             code = code + instruction + "\n";
 
         return code;
-    }
+    } // method compile
 
+    // SDD for program -> void main { declarations instructions }
     private void program() throws Exception {
-        match("void");
+        match("void"); // match the keywords & terminal symbols
+                                 // void ie needs to be seen first bc it's a keyword
         match("main");
         match("open_curly_bracket");
 
-        declarations();
+        declarations(); // declarations and instructions are 
         instructions();
 
         match("closed_curly_bracket");
-    }
+    } // method program
 
+    // SDD for declarations ->  declaration declarations  |  epsilon
     private void declarations() throws Exception {
+        // checks if the next token is a type (to start the declaration)
+        // little confused, why call recursively?
         if (this.token.getName().equals("int") || this.token.getName().equals("float") || this.token.getName().equals("boolean")) {
             declaration();
             declarations();
         }
     }
 
+    // SDD for  declaration ->  type { identifiers.type = type.value } identifiers ;
     private void declaration() throws Exception {
-        identifiers(type());
+        identifiers(type()); // declares the type of variable and puts it into the symbol table
         match("semicolon");
     }
 
     private String type() throws Exception {
         String type = this.token.getName();
 
+        // declaration of the types which are attributes?
         if (type.equals("int")) {
             match("int");
         } else if (type.equals("float")) {
@@ -141,58 +149,77 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         }
 
         return type;
-    }
+    } // method type
 
+    // identifiers  -> id
+    //                    { addSymbol(id.lexeme, identifiers.type);
+    //                       optional-declaration.id = identifiers.id;
+    //                       more-identifiers.type = identifiers.type }
+    //                 optional-declaration
+    //                 more-identifiers
     private void identifiers(String type) throws Exception {
         if (this.token.getName().equals("id")) {
             Identifier id = (Identifier) this.token;
 
-            if (this.symbols.get(id.getLexeme()) == null)
+            if (this.symbols.get(id.getLexeme()) == null) // believe to be a part of compiler
                 this.symbols.put(id.getLexeme(), new PrimitiveType(type));
             else
                 throw new Exception("\nError at line " + this.scanner.getLine() + ": identifier '" + id.getLexeme() + "' is already declared");
 
-            match("id");
+            match("id"); // match terminal symbol
 
-            optionalDeclaration(type, id);
+            optionalDeclaration(type, id);  // call optional declaration where we assign a value to id
+                                            // note: parameters = the id and it's type so "int a" part
 
-            moreIdentifiers(type);
+            moreIdentifiers(type);          // more identifiers for same type
+                                            // ex: int a ", b, c" <-- moreIdentifiers prt
         }
-    }
+    } // method identifiers
 
+    // " , id, id" part
+    // more-identifiers     ->  , id
+    //      { addSymbol(id.lexeme, identifiers.type); optional-declaration.id = identifiers.id; more-identifiers.type = identifiers.type
+    //      optional-declaration
+    //      more-identifiers |
+    //      epsilon
     private void moreIdentifiers(String type) throws Exception {
         if (this.token.getName().equals("comma")) {
-            match("comma");
+            match("comma"); // match the comma
 
-            Identifier id = (Identifier) this.token;
+            Identifier id = (Identifier) this.token; // create the identifier (the variable)
 
             if (this.symbols.get(id.getLexeme()) == null)
                 this.symbols.put(id.getLexeme(), new PrimitiveType(type));
             else
                 throw new Exception("\nError at line " + this.scanner.getLine() + ": identifier '" + id.getLexeme() + "' is already declared");
 
-            match("id");
+            match("id");    // after id is created match it
 
             optionalDeclaration(type, id);
 
             moreIdentifiers(type);
         }
-    }
+    } // method moreIdentifiers
 
+    // optional-declaration ->  = { print("push " + id.lexeme) } expression { print("store") } |
+    //                             epsilon
     private void optionalDeclaration(String type, Identifier id) throws Exception {
         if (this.token.getName().equals("assignment")) {
-            match("assignment");
+            match("assignment"); // create a token to assign a value to the id in parameter
 
             // the token 'assignment' allows to assign  an initial value to a variable in the declaration
 
-            this.code.add("push " + id.getLexeme());
+            this.code.add("push " + id.getLexeme()); // part of stack machine step
 
             expression();
 
             this.code.add("store");
         }
-    }
+    } // method optionalDeclaration
 
+    /** Parts to translate infix arithmetic expressions into stack machine code */
+    // instructions         ->  instruction instructions |
+    //                          epsilon
     private void instructions() throws Exception {
         String tokenName = this.token.getName();
 
@@ -202,7 +229,7 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
             instruction();
             instructions();
         }
-    }
+    } // method instructions
 
     private void instruction() throws Exception {
         String tokenName = this.token.getName();
@@ -219,7 +246,7 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
             match("semicolon");
 
         }
-    }
+    } // method instruction
 
     private void assignment() throws Exception {
         Identifier id = (Identifier) this.token;
@@ -231,7 +258,7 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         expression();
 
         this.code.add("store");
-    }
+    } // method assignment
 
     private void expression() throws Exception {
         term(); moreTerms();
@@ -263,7 +290,7 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
             moreTerms();
 
         }
-    }
+    } // method moreTerms
 
     private void factor() throws Exception {
         if (this.token.getName().equals("open_parenthesis")) {
@@ -297,7 +324,7 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
             throw new Exception("\nError at line " + this.scanner.getLine() + ": invalid arithmetic expression: open parenthesis, int or identifier expected");
 
         }
-    }
+    } // method factor
 
     private void moreFactors() throws Exception {
         if (this.token.getName().equals("multiply")) {
@@ -331,14 +358,14 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
             moreFactors();
 
         }
-    }
+    } // method moreFactors
 
     private void match(String tokenName) throws Exception {
         if (this.token.getName().equals(tokenName))
             this.token = this.scanner.getToken();
         else
             throw new Exception("\nError at line " + this.scanner.getLine() + ": " + this.scanner.getLexeme(tokenName) + " expected");
-    }
+    } // method match
 }
 
     /*private void optionalArray() throws Exception {
