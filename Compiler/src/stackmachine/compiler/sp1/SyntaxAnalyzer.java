@@ -248,16 +248,17 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         }
     } // method instruction
 
+    // assignment  -> id { print("push " + id.lexeme) } expression { print("store") }
     private void assignment() throws Exception {
-        Identifier id = (Identifier) this.token;
+        Identifier id = (Identifier) this.token; // create identifier for current token
 
-        this.code.add("push " + id.getLexeme());
+        this.code.add("push " + id.getLexeme());    // push id
 
-        match("assignment");
+        match("assignment");    // match the assignment to allow a value for the id
 
         expression();
 
-        this.code.add("store");
+        this.code.add("store");     // store token & it's value
     } // method assignment
 
     private void expression() throws Exception {
@@ -268,6 +269,7 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         factor(); moreFactors();
     }
 
+    // Arithmetic operations for stack
     private void moreTerms() throws Exception {
         if (this.token.getName().equals("add")) {
 
@@ -292,16 +294,20 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         }
     } // method moreTerms
 
+
+    // factor   -> (expression) |
+    //              id  { print("push " + id.lexeme) } ; print("load") |
+    //              num { print("push " + num.value) }
     private void factor() throws Exception {
-        if (this.token.getName().equals("open_parenthesis")) {
+        if (this.token.getName().equals("open_parenthesis")) {      // match non-terminal
 
             match("open_parenthesis");
 
-            expression();
+            expression();       // call expression
 
-            match("closed_parenthesis");
+            match("closed_parenthesis");    // match non-terminal
 
-        } else if (this.token.getName().equals("int")) {
+        } else if (this.token.getName().equals("int")) {  // only numbers accepted as tokens = positive integers
 
             IntegerNumber number = (IntegerNumber) this.token;
 
@@ -311,13 +317,13 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
         } else if (this.token.getName().equals("id")) {
 
-            Identifier id = (Identifier) this.token;
+            Identifier id = (Identifier) this.token; // create token for id
 
-            this.code.add("push " + id.getLexeme());
+            this.code.add("push " + id.getLexeme());    // push the id
 
             match("id");
 
-            this.code.add("load");
+            this.code.add("load");      // load it onto the stack
 
         } else {
 
@@ -326,6 +332,10 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         }
     } // method factor
 
+    // moreFactors   ->  factor { print("*") } moreFactors |
+    //                   / factor { print("/") } moreFactors |
+    //                   % factor { print("%") } moreFactors |
+    //                   epsilon
     private void moreFactors() throws Exception {
         if (this.token.getName().equals("multiply")) {
 
@@ -366,9 +376,11 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         else
             throw new Exception("\nError at line " + this.scanner.getLine() + ": " + this.scanner.getLexeme(tokenName) + " expected");
     } // method match
-}
 
-    /*private void optionalArray() throws Exception {
+} // class SyntaxAnalyzer
+
+    /*
+    private void optionalArray() throws Exception {
         if (this.token.getName().equals("id")) {
 
             Identifier id = (Identifier) this.token;
