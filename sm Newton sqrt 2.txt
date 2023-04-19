@@ -1,0 +1,40 @@
+push number
+push 2.0
+store
+push i
+push 1
+store
+push root
+push number
+load
+store
+label 0:
+push i
+load
+push 10
+<
+gofalse label 1
+push root
+push 0.5
+push root
+load
+push number
+load
+push root
+load
+/
++
+*
+store
+push i
+push i
+load
+push 1
++
+store
+goto label 0
+label 1:
+push root
+load
+print
+halt

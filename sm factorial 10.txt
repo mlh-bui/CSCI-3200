@@ -1,0 +1,31 @@
+push i
+push 1
+store
+push f
+push 1
+store
+label 0:
+push i
+load
+push 10
+<=
+gofalse label 1
+push f
+push f
+load
+push i
+load
+*
+store
+push i
+push i
+load
+push 1
++
+store
+goto label 0
+label 1:
+push f
+load
+print
+halt

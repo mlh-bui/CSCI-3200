@@ -1,28 +1,45 @@
-// 4/17 Given Code for Sprint 1
+package stackmachine.compiler.sp3;
 
-package stackmachine.compiler.sp2;
+import slu.compiler.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import slu.compiler.*;
 
-/*
+/* Rules
 program                ->  void main { declarations instructions }
 declarations           ->  declaration declarations | ε
 declaration            ->  type identifiers ;
 type                   ->  int | float | boolean
 identifiers            ->  id optional-declaration more-identifiers
 more-identifiers       ->  , id optional-declaration more-identifiers | ε
-optional-declaration   ->  = expression | [num] | ε
+optional-declaration   ->  = logic-expression | [num] | ε
 instructions           ->  instruction instructions | ε
-instruction            ->  declaration          |
-                           id assignment ;      |
-                           print (expression) ; |
+
+NEED THESE PARTS
+instruction            ->  declaration                                        |
+                           id assignment ;                                    |
+                           if (logic-expression) instruction                  |
+                           if (logic-expression) instruction else instruction |
+                           while (logic-expression) instruction               |
+                           do instruction while (logic-expression) ;          |
+                           print (expression) ;                               |
                            { instructions }
-assignment             ->  optional-array = expression
-optional-array         ->  [expression] | ε
+assignment             ->  optional-array = logic-expression |
+optional-array         ->  [expression]    | ε
+logic-expression       ->  logic-expression || logic-term |
+                           logic-term
+logic-term             ->  logic-term && logic-factor |
+                           logic-factor
+logic-factor           ->  ! logic-factor | true | false |
+                           relational-expression
+relational-expression  ->  expression relational-operator expression |
+                           expression
+relational-operator    ->  < | <= | > | >= | == | !=
+END OF PARTS NEED
+
+optional-array         ->  [expression]
 expression             ->  expression + term |
                            expression - term |
                            term
@@ -34,7 +51,6 @@ factor                 ->  (expression)      |
                            id optional-array |
                            num
  */
-
 public class SyntaxAnalyzer implements ISyntaxAnalyzer {
     private IToken token;
     private ILexicalAnalyzer scanner;

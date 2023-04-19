@@ -8,9 +8,9 @@ public class TestProgram {
 
             IStackMachineCompiler stackMachineCompiler = new StackMachineCompiler();
 
-            stackMachineCompiler.compile("program test array.txt", "svm test array.txt");
+            stackMachineCompiler.compile("program test arrays.txt", "sm test arrays.txt");
 
-            System.out.println("'program test array.txt' compiled successfully!");
+            System.out.println("'program test arrays.txt' compiled successfully!");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
