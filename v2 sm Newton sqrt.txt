@@ -8,12 +8,12 @@ push root
 push number
 load
 store
-label 0:
+label 24:
 push i
 load
 push 10
 <
-gofalse label 1
+gofalse label 25
 push root
 push 0.5
 push root
@@ -32,8 +32,8 @@ load
 push 1
 +
 store
-goto label 0
-label 1:
+goto label 24
+label 25:
 push root
 load
 print

@@ -1,0 +1,59 @@
+push n
+push 20
+store
+array f int 21
+push f
+push 0
++
+push 0
+store
+push f
+push 1
++
+push 1
+store
+push i
+push 2
+store
+label 22:
+push i
+load
+push n
+load
+<=
+gofalse label 23
+push f
+push i
+load
++
+push f
+push i
+load
+push 2
+-
++
+load
+push f
+push i
+load
+push 1
+-
++
+load
++
+store
+push i
+push i
+load
+push 1
++
+store
+goto label 22
+label 23:
+push f
+push n
+load
++
+load
+print
+halt

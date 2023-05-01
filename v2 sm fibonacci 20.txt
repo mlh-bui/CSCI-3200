@@ -1,0 +1,46 @@
+push i
+push 2
+store
+push n
+push 20
+store
+push f_2
+push 0
+store
+push f_1
+push 1
+store
+label 20:
+push i
+load
+push n
+load
+<=
+gofalse label 21
+push f
+push f_2
+load
+push f_1
+load
++
+store
+push f_2
+push f_1
+load
+store
+push f_1
+push f
+load
+store
+push i
+push i
+load
+push 1
++
+store
+goto label 20
+label 21:
+push f
+load
+print
+halt

@@ -1,6 +1,6 @@
 void main {
 
-   // fibonacci(20) using an array
+   /* fibonacci(20) using an array */
 
    int n = 20, f[21];
 

@@ -1,6 +1,6 @@
 void main {
 
-   // sqrt(2.0) using Newton's method
+   /* sqrt(2.0) using Newton's method */
 
    float root, number = 2.0;
 

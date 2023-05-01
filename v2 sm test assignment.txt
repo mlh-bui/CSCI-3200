@@ -1,0 +1,30 @@
+push y
+push 2
+store
+push m
+push 1
+store
+push d
+push 3
+store
+push x
+push 14
+push y
+load
+*
+push 4
+/
+push 16
+push m
+load
+*
+push 4
++
+push 2
+/
++
+push d
+load
++
+store
+halt

@@ -1,0 +1,113 @@
+array data int 20
+push i
+push 0
+store
+push size
+push 20
+store
+label 8:
+push i
+load
+push size
+load
+<
+gofalse label 9
+push data
+push i
+load
++
+push i
+load
+push 1
++
+push 2
+*
+store
+push i
+push i
+load
+push 1
++
+store
+goto label 8
+label 9:
+push low
+push 0
+store
+push high
+push size
+load
+push 1
+-
+store
+push key
+push 14
+store
+push found
+push 0
+store
+label 10:
+push low
+load
+push high
+load
+<=
+push found
+load
+!
+&&
+gofalse label 11
+push mid
+push low
+load
+push high
+load
++
+push 2
+/
+store
+push data
+push mid
+load
++
+load
+push key
+load
+==
+gofalse label 12
+push found
+push 1
+store
+goto label 13
+label 12:
+push data
+push mid
+load
++
+load
+push key
+load
+>
+gofalse label 14
+push high
+push mid
+load
+push 1
+-
+store
+goto label 15
+label 14:
+push low
+push mid
+load
+push 1
++
+store
+label 15:
+label 13:
+goto label 10
+label 11:
+push found
+load
+print
+halt

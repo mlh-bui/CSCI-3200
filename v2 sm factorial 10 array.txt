@@ -1,0 +1,49 @@
+push n
+push 10
+store
+array f int 11
+push f
+push 0
++
+push 1
+store
+push i
+push 1
+store
+label 18:
+push i
+load
+push n
+load
+<=
+gofalse label 19
+push f
+push i
+load
++
+push f
+push i
+load
+push 1
+-
++
+load
+push i
+load
+*
+store
+push i
+push i
+load
+push 1
++
+store
+goto label 18
+label 19:
+push f
+push n
+load
++
+load
+print
+halt

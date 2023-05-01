@@ -1,6 +1,6 @@
 void main {
 
-   // factorial(10) using an array
+   /* factorial(10) using an array */
 
    int n = 10, f[11];
 
