@@ -1,3 +1,6 @@
+// Sprint 3 Project: Stack Machine Compiler
+// Marissa Bui - CSCI 3200
+
 package stackmachine.compiler.sp3;
 
 import slu.compiler.*;
@@ -30,8 +33,6 @@ import java.util.Map;
  * factor                 ->  (expression)      |
  *                            id optional-array |
  *                            num
- *
- * NEED THESE PARTS
  * instruction            ->  declaration                                        |
  *                            id assignment ;                                    |
  *                            if (logic-expression) instruction                  |
@@ -53,7 +54,6 @@ import java.util.Map;
  *                            expression
  *
  * relational-operator    ->  < | <= | > | >= | == | !=
- * END OF PARTS NEED
  *
  * Convert to Right-recursive SDD for a top-down recursive predictive parser
  * logic-expression -> logic-term more-logic-expression
@@ -61,14 +61,13 @@ import java.util.Map;
  * more-logic-expression -> || logic-term more-logic-expression |
  *                             epsilon
  *
- *
  * logic-term -> logic-factor more-logic-term
  *
  * more-logic-term -> && logic factor more-logic-term |
  *                             epsilon
  *
- *
  * relational-expression -> expression more-relational-expression
+ *
  * more-relational-expression -> relational-operator expression relational-expression-prime |
  *                             epsilon
  */
@@ -217,11 +216,6 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
     private void instructions() throws Exception {
         String tokenName = this.token.getName();
 
-        // check the tokens in FIRST(instruction)
-
-        // this if should contain the FIRST of instruction <-- aka we need all the tokens for declarations
-        // since instructions --> declarations
-        // so when adding if, while, do-while <-- need in instructions !!
         if (tokenName.equals("int")
                 || tokenName.equals("float")
                 || tokenName.equals("boolean")
@@ -235,12 +229,10 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         }
     } // method instructions
 
-    // FIRST(instruction) = { int, float, and boolean, id, print open_curly_bracket }
-    // why types included in first? bc it's the first of type which is the first of declaration
     private void instruction() throws Exception {
         String tokenName = this.token.getName();
 
-        // check the tokens in FIRST(instruction)
+        // checks the tokens in FIRST(instruction)
 
         if (tokenName.equals("int") || tokenName.equals("float") || tokenName.equals("boolean")) {
 
@@ -277,10 +269,10 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
             instruction();
 
+            // for an else statement call method for else instructions
             if(this.token.getName().equals("else")) {
                 optionalElse(out);
             } else {
-
                 this.code.add(out + ":");
             }
 
@@ -315,7 +307,7 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
             match("closed_curly_bracket");
 
-            if(tokenName.equals("while")) {
+            if(this.token.getName().equals("while")) {
 
                 match("open_parenthesis");
 
@@ -354,9 +346,8 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
             this.code.add("label " + out + ":");
         }
-    }
+    } // method optionalElse
 
-    // assignment             ->  optional-array = logic-expression |
     private void assignment() throws Exception {
         Identifier id = (Identifier) this.token;
 
@@ -377,7 +368,6 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         this.code.add("store");
     } // method assignment
 
-    // logic-factor           ->  ! logic-factor | true | false | relational-expression
     private void logicFactor() throws Exception {
         String tokenName = this.token.getName();
 
@@ -405,8 +395,6 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
     } // method logicFactor
 
-    // relational-expression  ->  expression relational-operator expression |
-    //                            expression
     private void relationalExpression() throws Exception {
         expression(); moreRelationalExpression();
     } // method relationalExpression
@@ -479,10 +467,9 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
             moreRelationalExpression();
         }
-    }
+    } // method moreRelationalExpression
 
-    // relational-operator    ->  < | <= | > | >= | == | !=
-    private String relationalOperator() throws Exception {
+    private void relationalOperator() throws Exception {
         String operator = this.token.getName();
 
         if (operator.equals("greater_than")) {
@@ -503,10 +490,8 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
         }
 
-        return operator;
     } // method relationalOperator
 
-    // fac[1] = fac[2] // can assign the value of an array
     private void optionalArray(Identifier id) throws Exception {
         if (this.token.getName().equals("open_square_bracket")) {
 
@@ -524,8 +509,6 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         }
     } // method optionalArray
 
-    // logic-expression       ->  logic-expression || logic-term |
-    //                            logic-term
     private void logicExpression() throws Exception {
         logicTerm(); moreLogicExpression();
 
@@ -541,10 +524,8 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
             moreLogicExpression();
         }
-    }
+    } // method moreLogicExpression
 
-    // logic-term             ->  logic-term && logic-factor |
-    //                            logic-factor
     private void logicTerm() throws Exception {
         logicFactor(); moreLogicTerm();
     } // method logicTerm
@@ -562,22 +543,10 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         }
     } // method moreLogicTerm
 
-
-    // expression             ->  expression + term |
-    //                        expression - term |
-    //                        term
     private void expression() throws Exception {
         term(); moreTerms();
     } // method expression
 
-
-    // term               >  term * factor |
-    //                       term / factor |
-    //                       term % factor |
-    //                       factor
-
-    // term --> factor moreFactor
-    // factor --> check id
     private void term() throws Exception {
         factor(); moreFactors();
     } // method term
@@ -606,9 +575,9 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
         }
     } // method moreTerms
 
-    // FIRST(factor) = { ( id num }
     private void factor() throws Exception {
-        if (this.token.getName().equals("open_parenthesis")) {
+        String tokenName = this.token.getName();
+        if (tokenName.equals("open_parenthesis")) {
 
             match("open_parenthesis");
 
@@ -616,7 +585,7 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
             match("closed_parenthesis");
 
-        } else if (this.token.getName().equals("int")) {
+        } else if (tokenName.equals("int")) {
 
             IntegerNumber number = (IntegerNumber) this.token;
 
@@ -624,28 +593,26 @@ public class SyntaxAnalyzer implements ISyntaxAnalyzer {
 
             match("int");
 
-        } else if (this.token.getName().equals("float")) {
+        } else if (tokenName.equals("float")) {
             RealNumber number = (RealNumber) this.token;
 
             this.code.add("push " + number.getValue());
 
             match("float");
 
-        } else if (this.token.getName().equals("false")) {
-            String bool = this.token.toString();
+        } else if (tokenName.equals("false")) {
 
             this.code.add("push 0");
 
             match("false");
 
-        } else if (this.token.getName().equals("true")) {
-            String bool = this.token.toString();
+        } else if (tokenName.equals("true")) {
 
             this.code.add("push 1");
 
             match("true");
 
-        } else if (this.token.getName().equals("id")) {
+        } else if (tokenName.equals("id")) {
 
             Identifier id = (Identifier) this.token;
 

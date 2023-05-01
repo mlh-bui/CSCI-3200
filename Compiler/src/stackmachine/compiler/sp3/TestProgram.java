@@ -1,3 +1,6 @@
+// Sprint 3 Project: Stack Machine Compiler
+// Marissa Bui - CSCI 3200
+
 package stackmachine.compiler.sp3;
 
 import slu.stackmachine.*;
@@ -5,6 +8,7 @@ import slu.stackmachine.*;
 public class TestProgram {
 
     public static void main(String[] args) {
+
         try {
 
             IStackMachineCompiler stackMachineCompiler = new StackMachineCompiler();

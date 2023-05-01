@@ -1,7 +1,10 @@
+// Sprint 3 Project: Stack Machine Compiler
+// Marissa Bui - CSCI 3200
+
 package stackmachine.compiler.sp3;
 
 public interface ISyntaxAnalyzer {
 
-    public String compile() throws Exception;
+    String compile() throws Exception;
 
-}
+} // interface ISyntaxAnalyzer

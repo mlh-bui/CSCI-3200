@@ -1,7 +1,10 @@
-package test;
+// Sprint 3 Project: Stack Machine Compiler
+// Marissa Bui - CSCI 3200
+
+package stackmachine.compiler.sp3;
 
 import slu.stackmachine.*;
-public class TestProgram {
+public class SM_TestProgram {
 
     public static void main(String[] args) {
 
@@ -42,9 +45,7 @@ public class TestProgram {
             stackMachine.run("sm test arrays.txt");
 
 
-
-
-            System.out.println("\nV2 Using My Stack Machine Code Compiled");
+            System.out.println("\nV2 Compiled with Sprint 3 Stack Machine Code");
 
             System.out.print("v2 sm binary search is: ");
 
@@ -82,6 +83,6 @@ public class TestProgram {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
+    } // method main
 
-}
+} // class TestProgram

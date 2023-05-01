@@ -1,3 +1,6 @@
+// Sprint 3 Project: Stack Machine Compiler
+// Marissa Bui - CSCI 3200
+
 package stackmachine.compiler.sp3;
 
 import slu.compiler.LexicalAnalyzer;
@@ -28,4 +31,4 @@ public class StackMachineCompiler implements IStackMachineCompiler {
         }
     } // method compile
 
-}
+} // class StackMachineCompiler
